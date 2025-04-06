@@ -1,0 +1,100 @@
+<html>
+  <div style="background-color:lightblue;height:40px"> Drag here </div>
+
+<script>
+
+  function doIt() {
+
+    var container = document.createElement('div');
+
+
+
+    container.innerHTML =
+    `<div id="handle">Drag here</div>` +
+
+      '<textarea id="jsInput" rows="8" style="width: 100%; margin-top: 10px; padding: 5px;" placeholder="Type JavaScript here..."></textarea>' +
+      '<button id="runBtn" style="margin-top: 10px; background: #000; color: #fff;">Run</button>';
+
+    document.body.appendChild(container);
+
+    container.id = 'bookmarklet-ui';
+    container.style.position = 'fixed';
+    container.style.bottom = '10px';
+    container.style.right = '10px';
+    container.style.width = '300px';
+    container.style.maxHeight = '400px';
+    container.style.overflow = 'auto';
+    container.style.padding = '10px';
+    container.style.background = '#fff';
+    container.style.border = '1px solid #000';
+    container.style.zIndex = '9999';
+    container.style.top= '10px';
+
+    handle.style.background = 'lightblue';
+    handle.style.height = '40px';
+
+  }
+
+
+ //Make the DIV element draggagle:
+dragElement(document.getElementById("handle"));
+
+function dragElement(elmnt) {
+  var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+  if (document.getElementById(elmnt.id + "header")) {
+    /* if present, the header is where you move the DIV from:*/
+    document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
+  } else {
+    /* otherwise, move the DIV from anywhere inside the DIV:*/
+    elmnt.onmousedown = dragMouseDown;
+  }
+
+  function dragMouseDown(e) {
+    e = e || window.event;
+    e.preventDefault();
+    // get the mouse cursor position at startup:
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = closeDragElement;
+    // call a function whenever the cursor moves:
+    document.onmousemove = elementDrag;
+  }
+
+  function elementDrag(e) {
+    e = e || window.event;
+    e.preventDefault();
+    // calculate the new cursor position:
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    // set the element's new position:
+    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+  }
+
+  function closeDragElement() {
+    /* stop moving when mouse button is released:*/
+    document.onmouseup = null;
+    document.onmousemove = null;
+  }
+}
+
+
+</script>
+
+<body>
+  <h1>Test Page</h1>
+  <button onclick="doIt()">DoIt</button>
+  <h1>Drag this button to your bookmarks bar:</h1>
+ 
+  <a href="javascript:(function(){alert('Hello from the bookmarklet!');})();" 
+     style="display: inline-block; padding: 10px 20px; background: #2196F3; color: white; text-decoration: none; border-radius: 5px; cursor: grab;">
+      &#128204; My Bookmarklet
+  </a>
+
+
+</body>
+ 
+document.body.style.transform = "rotate(70deg)"
+</html>

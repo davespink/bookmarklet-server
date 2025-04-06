@@ -1,0 +1,18 @@
+{
+    "rules": [
+      {
+        "match": "localhost",
+        "ui": "<h3>Local Thumbs</h3><div id='gallery'></div>",
+        "script": "Array.from(document.querySelectorAll('img.local-thumb')).forEach(i => document.getElementById('gallery').innerHTML += `<img src='${i.src}' style='width:100px;'>`);"
+      },
+      {
+        "match": "x.com",
+        "ui": "<h3>X Thumbs</h3><div id='gallery'></div>",
+        "script": "Array.from(document.querySelectorAll('img')).filter(i => i.naturalWidth <= 200).forEach(i => document.getElementById('gallery').innerHTML += `<img src='${i.src}' style='width:100px;'>`);"
+      }
+    ],
+    "default": {
+      "ui": "<h3>Images</h3><div id='gallery'></div>",
+      "script": "Array.from(document.querySelectorAll('img')).filter(i => i.naturalWidth <= 200).forEach(i => document.getElementById('gallery').innerHTML += `<img src='${i.src}' style='width:100px;'>`);"
+    }
+  }

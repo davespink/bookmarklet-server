@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hamburger Menu Example</title>
+    <style>
+        /* Hamburger menu styling */
+        .hamburger-menu {
+            position: relative;
+            display: inline-block;
+        }
+
+        .hamburger-btn {
+            font-size: 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 4px;
+        }
+
+        .dropdown-content a {
+            color: #333;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #ddd;
+        }
+
+        .hamburger-menu.active .dropdown-content {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Hamburger Menu -->
+    <div class="hamburger-menu">
+        <button class="hamburger-btn">☰</button>
+        <div class="dropdown-content">
+            <a href="#" onclick="alert('Option 1 clicked!'); return false;">Option 1</a>
+            <a href="#" onclick="alert('Option 2 clicked!'); return false;">Option 2</a>
+            <a href="#" onclick="alert('Option 3 clicked!'); return false;">Option 3</a>
+        </div>
+    </div>
+
+    <script>
+        // Toggle dropdown on click
+        const hamburgerMenu = document.querySelector('.hamburger-menu');
+        const hamburgerBtn = document.querySelector('.hamburger-btn');
+
+        hamburgerBtn.addEventListener('click', function() {
+            hamburgerMenu.classList.toggle('active');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!hamburgerMenu.contains(event.target)) {
+                hamburgerMenu.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -15,13 +15,14 @@
             top: 20px;
             left: 20px;
             z-index: 9999;
-            background-color: #f1f1f1;
+            background-color: lightskyblue;
             border: 1px solid #d3d3d3;
             width: 400px;
             padding: 5px;
             display: flex;
             flex-direction: column;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            height: 90%;
         }
 
         #mydivheader {
@@ -123,6 +124,10 @@
             color: #333;
         }
     </style>
+
+
+
+
 </head>
 
 <body>
@@ -138,33 +143,36 @@
                 </div>
             </div>
         </div>
-        <div id="panel">
+        <div id="panel" style="background-color:green">
             <p>Javascript Injection</p>
-            <textarea id="jsInput" rows="20" placeholder="Type JavaScript here..."></textarea>
+            <textarea id="jsInput" rows="10" placeholder="Type JavaScript here..."></textarea>
             <button id="runBtn">Run</button>
+        </div>
+
+        <div>
             <button id="closeBtn">Close</button>
             <button id="wsBtn">Test WebSocket</button>
             <button id="fetchBtn">Test Fetch</button>
             <button id="snapBtn">Take Snapshot</button>
             <p id="debug">Debug goes here</p>
+
         </div>
+
+
     </div>
 
     <script>
         (function () {
-
-         
-
-            var mydiv = document.getElementById('myDiv');
+            var panel = document.getElementById('myDiv');
             var header = document.getElementById('mydivheader');
             var input = document.getElementById('jsInput');
-            var panel = document.getElementById('panel');
 
-            window.handleMenuAction = function (message) {
-                alert(message);
-                document.querySelector('.hamburger-menu').classList.remove('active');
-                panel.innerHTML="xx";
-            };
+            (function () {
+                window.handleMenuAction = function (message) {
+                    alert(message);
+                    document.querySelector('.hamburger-menu').classList.remove('active');
+                };
+            })();
 
             function dragElement(el, header) {
                 var x1 = 0, x2 = 0, y1 = 0, y2 = 0;
@@ -191,10 +199,9 @@
                     e.stopPropagation();
                 };
             }
-            dragElement(mydiv, header);
+            dragElement(panel, header);
 
             setTimeout(function () {
-                m
                 input.focus();
             }, 0);
 
@@ -210,7 +217,7 @@
             });
 
             document.getElementById('closeBtn').addEventListener('click', function () {
-                mydiv.remove();
+                panel.remove();
             });
 
             document.getElementById('wsBtn').addEventListener('click', function () {

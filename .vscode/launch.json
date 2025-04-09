@@ -6,8 +6,9 @@
     "configurations": [
 
 
+
         {
-            "name": "Attach to Chrome",
+            "name": "Attach to Chrome Disk",
             "port": 9222,
             "request": "attach",
             "type": "chrome",
@@ -18,8 +19,17 @@
         {
             "type": "chrome",
             "request": "launch",
-            "name": "Launch Chrome against localhost",
+            "name": "Explorer tool",
             "url": "http://localhost/bookmarklet-server/explorer-tool.html",
+            "webRoot": "${workspaceFolder}"
+        }
+
+
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Index",
+            "url": "http://localhost/bookmarklet-server/index.html",
             "webRoot": "${workspaceFolder}"
         }
     ]

@@ -10,7 +10,7 @@
             margin: 0;
         }
 
-        #myDiv {
+        #mydiv {
             position: absolute;
             top: 20px;
             left: 20px;
@@ -93,6 +93,7 @@
 
         #panel {
             background-color: #fff;
+            height: 400px;
             padding: 10px;
             flex: 1;
         }
@@ -126,45 +127,60 @@
 </head>
 
 <body>
-    <div id="myDiv">
+
+    <image src="images/pigs.jpg" width="120px">
+    <div id="mydiv">
         <div id="mydivheader">
             <span>Click here to move</span>
             <div class="hamburger-menu">
                 <button class="hamburger-btn">☰</button>
                 <div class="dropdown-content">
-                    <a href="javascript:void(0)" onclick="handleMenuAction('js injection')">js Injection</a>
-                    <a href="javascript:void(0)" onclick="alert('Image grabber'); return false;">Image grabber</a>
-                    <a href="javascript:void(0)" onclick="alert('Pranks'); return false;">Pranks</a>
+                    <a href="javascript:void(0)" onclick="handleMenuAction('jsInjection')">js Injection</a>
+                    <a href="javascript:void(0)" onclick="handleMenuAction();window.showPanel('images')">Image grabber</a>
+                    <a href="javascript:void(0)" onclick="handleMenuAction();window.showPanel('pranks')">Pranks</a>
+                    <a href="javascript:void(0)" onclick="mydiv.remove(); return false;">Close</a>
                 </div>
             </div>
         </div>
-        <div id="panel">
-            <p>Javascript Injection</p>
-            <textarea id="jsInput" rows="20" placeholder="Type JavaScript here..."></textarea>
-            <button id="runBtn">Run</button>
-            <button id="closeBtn">Close</button>
-            <button id="wsBtn">Test WebSocket</button>
-            <button id="fetchBtn">Test Fetch</button>
-            <button id="snapBtn">Take Snapshot</button>
+        <div style="background-color:yellow;padding:5px">
+            <div id="widget" style="background-color:cornsilk;height:200px;padding:5px">
+
+ 
+
+            </div>
+            <div id="panel">
+                <p>Javascript Injection</p>
+                <textarea id="jsInput" rows="12" placeholder="Type JavaScript here..."  spellcheck="false"></textarea>
+                <button id="runBtn">Run</button>
+                <button id="clearBtn">Clear</button>
+                <button id="wsBtn">Test WebSocket</button>
+                <button id="fetchBtn">Test Fetch</button>
+                <button id="snapBtn">Take Snapshot</button>
+
+            </div>
             <p id="debug">Debug goes here</p>
         </div>
+
     </div>
 
     <script>
         (function () {
 
-         
-
-            var mydiv = document.getElementById('myDiv');
+            var mydiv = document.getElementById('mydiv');
             var header = document.getElementById('mydivheader');
             var input = document.getElementById('jsInput');
             var panel = document.getElementById('panel');
+            var widget = document.getElementById('widget');
 
-            window.handleMenuAction = function (message) {
-                alert(message);
+            window.handleMenuAction = function ( ) {
                 document.querySelector('.hamburger-menu').classList.remove('active');
-                panel.innerHTML="xx";
+
             };
+
+            window.showPanel = function (type) {
+                panel.innerHTML = type;
+             }
+
 
             function dragElement(el, header) {
                 var x1 = 0, x2 = 0, y1 = 0, y2 = 0;
@@ -194,7 +210,7 @@
             dragElement(mydiv, header);
 
             setTimeout(function () {
-                m
+           
                 input.focus();
             }, 0);
 
@@ -209,10 +225,10 @@
                 }
             });
 
-            document.getElementById('closeBtn').addEventListener('click', function () {
-                mydiv.remove();
+            document.getElementById('clearBtn').addEventListener('click', function () {
+              input.value = "";
             });
-
+            
             document.getElementById('wsBtn').addEventListener('click', function () {
                 var ws = new WebSocket('wss://ws.postman-echo.com/raw');
                 ws.addEventListener('open', function () { ws.send('Hello, WebSocket!'); });

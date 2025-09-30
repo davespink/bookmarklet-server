@@ -79,7 +79,20 @@
             color: #333;
         }
 
+        .test-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            margin: 2px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
 
+        .test-btn:hover {
+            background: #45a049;
+        }
 
         .dropdown-content {
             display: none;
@@ -127,7 +140,21 @@
             <button id="runBtn">Run</button>
         </div>
 
-
+        <!-- Predefined Test Buttons Section -->
+        <div id="testButtonsSection" style="background-color: #e8f4f8; padding: 15px; margin: 10px 0; border-radius: 5px;">
+            <h4 style="margin-top: 0; color: #333;">Quick Test Buttons (CSP-Safe)</h4>
+            <div id="testButtons" style="display: flex; flex-wrap: wrap; gap: 5px;">
+                <button id="testBtn1" class="test-btn">DOM Inspector</button>
+                <button id="testBtn2" class="test-btn">Image Counter</button>
+                <button id="testBtn3" class="test-btn">Form Fields</button>
+                <button id="testBtn4" class="test-btn">Page Info</button>
+                <button id="testBtn5" class="test-btn">Link Checker</button>
+            </div>
+            <div style="margin-top: 10px;">
+                <input type="text" id="newButtonName" placeholder="New button name..." style="padding: 5px; width: 150px;">
+                <button id="addTestBtn" style="background: green;">Add Button</button>
+            </div>
+        </div>
 
         <button id="closeBtn">Close</button><button id="wsBtn">Test
             WebSocket</button><button id="fetchBtn">Test
@@ -237,6 +264,114 @@
                         document.getElementById('debug').textContent = 'Snapshot taken!';
                     })
                     .catch(e => document.getElementById('debug').textContent = 'Snapshot Error: ' + e.message);
+            });
+
+            // Predefined test functions (CSP-safe, no eval needed)
+            var testFunctions = {
+                'DOM Inspector': function() {
+                    var elements = document.querySelectorAll('*');
+                    var info = 'Elements: ' + elements.length + '\n';
+                    info += 'Images: ' + document.images.length + '\n';
+                    info += 'Links: ' + document.links.length + '\n';
+                    info += 'Forms: ' + document.forms.length;
+                    document.getElementById('debug').textContent = info;
+                },
+                'Image Counter': function() {
+                    var images = document.querySelectorAll('img');
+                    var loaded = 0;
+                    var total = images.length;
+                    var urls = ""
+                    images.forEach(function(img) {
+                        if (img.complete && img.naturalWidth > 0) { loaded++; urls += img.src + "\n"; }
+                    });
+                    document.getElementById('debug').textContent = urls + ' Images: ' + loaded + '/' + total + ' loaded';
+                },
+                'Form Fields': function() {
+                    var inputs = document.querySelectorAll('input, textarea, select');
+                    var info = 'Form fields found: ' + inputs.length + '\n';
+                    var types = {};
+                    inputs.forEach(function(input) {
+                        var type = input.type || input.tagName.toLowerCase();
+                        types[type] = (types[type] || 0) + 1;
+                    });
+                    for (var type in types) {
+                        info += type + ': ' + types[type] + '\n';
+                    }
+                    document.getElementById('debug').textContent = info;
+                },
+                'Page Info': function() {
+                    var info = 'Title: ' + document.title + '\n';
+                    info += 'URL: ' + window.location.href + '\n';
+                    info += 'Domain: ' + window.location.hostname + '\n';
+                    info += 'Protocol: ' + window.location.protocol;
+                    document.getElementById('debug').textContent = info;
+                },
+                'Link Checker': function() {
+                    var links = document.querySelectorAll('a[href]');
+                    var external = 0;
+                    var internal = 0;
+                    var mailto = 0;
+                    links.forEach(function(link) {
+                        var href = link.href;
+                        if (href.startsWith('mailto:')) {
+                            mailto++;
+                        } else if (href.startsWith('http') && !href.includes(window.location.hostname)) {
+                            external++;
+                        } else {
+                            internal++;
+                        }
+                    });
+                    var info = 'Total links: ' + links.length + '\n';
+                    info += 'Internal: ' + internal + '\n';
+                    info += 'External: ' + external + '\n';
+                    info += 'Mailto: ' + mailto;
+                    document.getElementById('debug').textContent = info;
+                }
+            };
+
+            // Add event listeners for predefined test buttons
+            document.getElementById('testBtn1').addEventListener('click', testFunctions['DOM Inspector']);
+            document.getElementById('testBtn2').addEventListener('click', testFunctions['Image Counter']);
+            document.getElementById('testBtn3').addEventListener('click', testFunctions['Form Fields']);
+            document.getElementById('testBtn4').addEventListener('click', testFunctions['Page Info']);
+            document.getElementById('testBtn5').addEventListener('click', testFunctions['Link Checker']);
+
+            // Add button functionality
+            document.getElementById('addTestBtn').addEventListener('click', function() {
+                var buttonName = document.getElementById('newButtonName').value.trim();
+                if (buttonName) {
+                    var testButtonsDiv = document.getElementById('testButtons');
+                    var newButton = document.createElement('button');
+                    newButton.className = 'test-btn';
+                    newButton.textContent = buttonName;
+                    newButton.addEventListener('click', function() {
+                        // For new buttons, copy the textarea code and execute it
+                        try {
+                            var code = document.getElementById('jsInput').value;
+                            if (code.trim()) {
+                                var fn = new Function(code);
+                                fn();
+                                document.getElementById('debug').textContent = buttonName + ' executed successfully!';
+                            } else {
+                                document.getElementById('debug').textContent = 'No code in textarea to execute for ' + buttonName;
+                            }
+                        } catch (e) {
+                            document.getElementById('debug').textContent = buttonName + ' Error: ' + e.message;
+                        }
+                    });
+                    testButtonsDiv.appendChild(newButton);
+                    document.getElementById('newButtonName').value = '';
+                }
+            });
+
+            // Hamburger menu functionality
+            document.querySelector('.hamburger-btn').addEventListener('click', function() {
+                var testSection = document.getElementById('testButtonsSection');
+                if (testSection.style.display === 'none') {
+                    testSection.style.display = 'block';
+                } else {
+                    testSection.style.display = 'none';
+                }
             });
         })();
     </script>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ThumbBoy - Image URL Grabber Bookmarklet</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .bookmarklet-btn {
+      display: inline-block;
+      padding: 15px 30px;
+      background-color: #4CAF50;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      cursor: move;
+      font-size: 18px;
+      font-weight: bold;
+      margin: 20px 0;
+      transition: background-color 0.3s;
+    }
+    .bookmarklet-btn:hover {
+      background-color: #45a049;
+    }
+    .instructions {
+      background-color: #e8f4f8;
+      padding: 20px;
+      border-radius: 5px;
+      margin: 20px 0;
+    }
+    .feature-list {
+      background-color: #f9f9f9;
+      padding: 20px;
+      border-radius: 5px;
+      margin: 20px 0;
+    }
+    .feature-list ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+    .feature-list li {
+      margin: 8px 0;
+    }
+    h1 {
+      color: #333;
+      text-align: center;
+    }
+    h2 {
+      color: #4CAF50;
+    }
+    .demo-note {
+      background-color: #fff3cd;
+      border: 1px solid #ffeaa7;
+      padding: 15px;
+      border-radius: 5px;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🖼️ ThumbBoy - Image URL Grabber</h1>
+    <p style="text-align: center; font-size: 18px; color: #666;">
+      A simple, focused bookmarklet for quickly grabbing all image URLs from any webpage
+    </p>
+
+    <div class="instructions">
+      <h2>📥 Installation Instructions</h2>
+      <ol>
+        <li><strong>Drag the green button below</strong> to your browser's bookmarks bar</li>
+        <li><strong>Visit any webpage</strong> with images</li>
+        <li><strong>Click the ThumbBoy bookmark</strong> to launch the tool</li>
+        <li><strong>Click "Grab Images"</strong> to collect all image URLs</li>
+      </ol>
+    </div>
+
+    <div style="text-align: center;">
+      <a class="bookmarklet-btn" href="#" id="bookmarkletLink">📌 ThumbBoy</a>
+      <p style="color: #666; font-style: italic;">⬆️ Drag this button to your bookmarks bar</p>
+    </div>
+
+    <div class="feature-list">
+      <h2>✨ Features</h2>
+      <ul>
+        <li>🎯 <strong>Simple & Focused</strong> - Only does one thing: grab image URLs</li>
+        <li>🖱️ <strong>Draggable Interface</strong> - Move the panel anywhere on the page</li>
+        <li>📝 <strong>Numbered List</strong> - All URLs are numbered for easy reference</li>
+        <li>🔍 <strong>Smart Filtering</strong> - Only shows images with valid URLs</li>
+        <li>📊 <strong>Count Summary</strong> - Shows total number of images found</li>
+        <li>💾 <strong>Copy-Friendly</strong> - Easy to select and copy URLs</li>
+        <li>🚫 <strong>CSP Safe</strong> - Works on most websites without restrictions</li>
+      </ul>
+    </div>
+
+    <div class="demo-note">
+      <h2>🧪 Try It Out</h2>
+      <p>Test ThumbBoy on websites like:</p>
+      <ul>
+        <li>Image galleries or portfolios</li>
+        <li>Social media feeds</li>
+        <li>E-commerce product pages</li>
+        <li>News articles with photos</li>
+        <li>Any webpage with images!</li>
+      </ul>
+    </div>
+
+    <div style="text-align: center; margin-top: 30px; color: #666; font-size: 14px;">
+      <p>ThumbBoy is a lightweight, privacy-focused tool that runs entirely in your browser.</p>
+      <p>No data is sent to external servers.</p>
+    </div>
+  </div>
+
+  <script>
+    var thumbboyCode = "(function(){if(document.getElementById('thumbboy-panel')){return;}var html='<div id=\"thumbboy-panel\" style=\"position:fixed;top:20px;left:20px;z-index:999999;background-color:#f1f1f1;text-align:center;border:1px solid #d3d3d3;width:400px;padding:5px;display:flex;flex-direction:column;font-family:Arial,sans-serif;\"><div id=\"thumbboy-header\" style=\"display:flexbox;justify-content:space-between;align-items:center;cursor:move;z-index:1000000;background-color:#2196F3;color:#fff;user-select:none;padding:10px;\"><span>ThumbBoy - Drag to Move</span></div><div style=\"background-color:#e8f4f8;padding:20px;margin:10px 0;\"><h3 style=\"margin-top:0;color:#333;\">Image URL Grabber</h3><button id=\"thumbboy-grab\" style=\"margin:5px;background:#4CAF50;color:#fff;border:none;padding:10px 20px;cursor:pointer;border-radius:3px;font-size:14px;\">Grab Images</button><button id=\"thumbboy-close\" style=\"margin:5px;background:#f44336;color:#fff;border:none;padding:10px 20px;cursor:pointer;border-radius:3px;font-size:14px;\">Close</button></div><div id=\"thumbboy-debug\" style=\"color:#333;background:white;border:1px solid #ccc;padding:10px;margin-top:10px;max-height:300px;overflow-y:auto;text-align:left;white-space:pre-wrap;font-family:monospace;font-size:12px;\">Click \"Grab Images\" to collect all image URLs from this page...</div></div>';var container=document.createElement('div');document.body.appendChild(container);container.innerHTML=html;var panel=document.getElementById('thumbboy-panel');var header=document.getElementById('thumbboy-header');function dragElement(el,header){var x1=0,x2=0,y1=0,y2=0;header.onmousedown=function(e){e.preventDefault();e.stopPropagation();y1=e.clientX;y2=e.clientY;document.onmousemove=function(e){e.preventDefault();x1=y1-e.clientX;x2=y2-e.clientY;y1=e.clientX;y2=e.clientY;el.style.top=(el.offsetTop-x2)+'px';el.style.left=(el.offsetLeft-x1)+'px';};document.onmouseup=function(){document.onmousemove=null;document.onmouseup=null;};};el.onmousedown=function(e){e.stopPropagation();};}dragElement(panel,header);document.getElementById('thumbboy-grab').addEventListener('click',function(){var images=document.querySelectorAll('img');var urls='';var count=0;if(images.length===0){document.getElementById('thumbboy-debug').textContent='No images found on this page.';return;}images.forEach(function(img,index){if(img.src&&img.src.trim()!==''){count++;urls+=count+'. '+img.src+'\\n';}});var summary='Found '+count+' images with valid URLs:\\n\\n'+urls;if(count===0){summary='Found '+images.length+' image elements, but none have valid src URLs.';}document.getElementById('thumbboy-debug').textContent=summary;});document.getElementById('thumbboy-close').addEventListener('click',function(){panel.remove();});})();";
+
+    document.getElementById('bookmarkletLink').href = 'javascript:' + thumbboyCode;
+  </script>
+</body>
+</html>

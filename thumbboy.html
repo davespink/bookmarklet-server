@@ -17,7 +17,7 @@
             background-color: #f1f1f1;
             text-align: center;
             border: 1px solid #d3d3d3;
-            width: 400px;
+            width: 500px;
             padding: 5px;
             display: flex;
             flex-direction: column;
@@ -81,6 +81,49 @@
             padding: 20px;
             margin: 10px 0;
         }
+
+        #gallery {
+            display: none;
+            background: white;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        #gallery.show {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .gallery-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            background: #fafafa;
+            justify-content: center;
+        }
+
+        .gallery-item img {
+            max-width: 150px;
+            max-height: 150px;
+            object-fit: contain;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            background: white;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .gallery-item img:hover {
+            transform: scale(1.05);
+            border-color: #4CAF50;
+        }
     </style>
 </head>
 
@@ -93,6 +136,7 @@
 
         <div class="panel-content">
             <h3 style="margin-top: 0; color: #333;">Image URL Grabber</h3>
+            <div id="gallery"></div>
             <button id="grabBtn">Grab Images</button>
             <button id="closeBtn">Close</button>
         </div>
@@ -139,6 +183,11 @@
                 var images = document.querySelectorAll('img');
                 var urls = '';
                 var count = 0;
+                var gallery = document.getElementById('gallery');
+
+                // Clear previous gallery
+                gallery.innerHTML = '';
+                gallery.className = '';
 
                 if (images.length === 0) {
                     document.getElementById('debug').textContent = 'No images found on this page.';
@@ -149,6 +198,36 @@
                     if (img.src && img.src.trim() !== '') {
                         count++;
                         urls += count + '. ' + img.src + '\n';
+                        
+                        // Create gallery item
+                        var galleryItem = document.createElement('div');
+                        galleryItem.className = 'gallery-item';
+                        
+                        var thumbnail = document.createElement('img');
+                        thumbnail.src = img.src;
+                        thumbnail.style.maxWidth = '150px';
+                        thumbnail.style.maxHeight = '150px';
+                        thumbnail.style.objectFit = 'contain';
+                        thumbnail.style.cursor = 'pointer';
+                        thumbnail.title = 'Click to open in new tab: ' + img.src;
+                        
+                        // Add click handler to open in new tab
+                        thumbnail.addEventListener('click', function() {
+                            window.open(img.src, '_blank');
+                        });
+                        
+                        thumbnail.onerror = function() {
+                            this.style.display = 'none';
+                            var errorText = document.createElement('div');
+                            errorText.textContent = 'Failed to load image';
+                            errorText.style.color = '#999';
+                            errorText.style.fontSize = '12px';
+                            errorText.style.textAlign = 'center';
+                            galleryItem.appendChild(errorText);
+                        };
+                        
+                        galleryItem.appendChild(thumbnail);
+                        gallery.appendChild(galleryItem);
                     }
                 });
 
@@ -156,6 +235,8 @@
                 
                 if (count === 0) {
                     summary = 'Found ' + images.length + ' image elements, but none have valid src URLs.';
+                } else {
+                    gallery.className = 'show';
                 }
 
                 document.getElementById('debug').textContent = summary;

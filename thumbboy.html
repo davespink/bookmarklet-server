@@ -62,6 +62,14 @@
             background: #da190b;
         }
 
+        #copyBtn {
+            background: #ff9800;
+        }
+
+        #copyBtn:hover {
+            background: #e68900;
+        }
+
         #debug {
             color: #333;
             background: white;
@@ -141,6 +149,7 @@
             <h3 style="margin-top: 0; color: #333;">Image URL Grabber</h3>
             <div id="gallery"></div>
             <button id="grabBtn">Grab Images</button>
+            <button id="copyBtn" style="display: none;">Copy JSON</button>
             <button id="closeBtn">Close</button>
         </div>
 
@@ -184,13 +193,15 @@
             // Grab button functionality
             document.getElementById('grabBtn').addEventListener('click', function () {
                 var images = document.querySelectorAll('img');
-                var urls = '';
+                var urls = [];
                 var count = 0;
                 var gallery = document.getElementById('gallery');
+                var copyBtn = document.getElementById('copyBtn');
 
                 // Clear previous gallery
                 gallery.innerHTML = '';
                 gallery.className = '';
+                copyBtn.style.display = 'none';
 
                 if (images.length === 0) {
                     document.getElementById('debug').textContent = 'No images found on this page.';
@@ -200,7 +211,7 @@
                 images.forEach(function(img, index) {
                     if (img.src && img.src.trim() !== '') {
                         count++;
-                        urls += count + '. ' + img.src + '\n';
+                        urls.push(img.src);
                         
                         // Create gallery item
                         var galleryItem = document.createElement('div');
@@ -234,16 +245,62 @@
                     }
                 });
 
-                var summary = 'Found ' + count + ' images with valid URLs:\n\n' + urls;
+                var jsonOutput = {
+                    "timestamp": new Date().toISOString(),
+                    "source_url": window.location.href,
+                    "total_images": count,
+                    "image_urls": urls
+                };
+                
+                var summary = 'Found ' + count + ' images. JSON data:\n\n' + JSON.stringify(jsonOutput, null, 2);
                 
                 if (count === 0) {
                     summary = 'Found ' + images.length + ' image elements, but none have valid src URLs.';
                 } else {
                     gallery.className = 'show';
+                    copyBtn.style.display = 'inline-block';
+                    window.thumbboyJsonData = jsonOutput;
                 }
 
                 document.getElementById('debug').textContent = summary;
             });
+
+            // Copy button functionality
+            document.getElementById('copyBtn').addEventListener('click', function () {
+                if (window.thumbboyJsonData) {
+                    var jsonString = JSON.stringify(window.thumbboyJsonData, null, 2);
+                    
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(jsonString).then(function() {
+                            document.getElementById('debug').textContent = 'JSON copied to clipboard!\n\n' + jsonString;
+                        }).catch(function() {
+                            copyToClipboardFallback(jsonString);
+                        });
+                    } else {
+                        copyToClipboardFallback(jsonString);
+                    }
+                }
+            });
+            
+            function copyToClipboardFallback(text) {
+                var textArea = document.createElement('textarea');
+                textArea.value = text;
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-999999px';
+                textArea.style.top = '-999999px';
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                
+                try {
+                    document.execCommand('copy');
+                    document.getElementById('debug').textContent = 'JSON copied to clipboard!\n\n' + text;
+                } catch (err) {
+                    document.getElementById('debug').textContent = 'Copy failed. Please manually copy the JSON below:\n\n' + text;
+                }
+                
+                document.body.removeChild(textArea);
+            }
 
             // Close button functionality
             document.getElementById('closeBtn').addEventListener('click', function () {

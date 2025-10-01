@@ -122,9 +122,103 @@
   </div>
 
   <script>
-    var thumbboyCode = "(function(){if(document.getElementById('thumbboy-panel')){return;}var html='<div id=\"thumbboy-panel\" style=\"position:fixed;top:20px;left:20px;z-index:999999;background-color:#f1f1f1;text-align:center;border:1px solid #d3d3d3;width:500px;padding:5px;display:flex;flex-direction:column;font-family:Arial,sans-serif;\"><div id=\"thumbboy-header\" style=\"cursor:move;z-index:1000000;background-color:#2196F3;color:#fff;user-select:none;padding:10px;\"><span>ThumbBoy v2.0 - Drag to Move</span></div><div style=\"background-color:#e8f4f8;padding:20px;margin:10px 0;\"><h3 style=\"margin-top:0;color:#333;\">Image URL Grabber</h3><div id=\"thumbboy-gallery\" style=\"display:none;background:white;border:1px solid #ccc;padding:10px;margin:10px 0;max-height:300px;overflow-y:auto;\"></div><button id=\"thumbboy-grab\" style=\"margin:5px;background:#4CAF50;color:#fff;border:none;padding:10px 20px;cursor:pointer;border-radius:3px;font-size:14px;\">Grab Images</button><button id=\"thumbboy-close\" style=\"margin:5px;background:#f44336;color:#fff;border:none;padding:10px 20px;cursor:pointer;border-radius:3px;font-size:14px;\">Close</button></div><div id=\"thumbboy-debug\" style=\"color:#333;background:white;border:1px solid #ccc;padding:10px;margin-top:10px;max-height:300px;overflow-y:auto;text-align:left;white-space:pre-wrap;font-family:monospace;font-size:12px;\">Click \"Grab Images\" to collect all image URLs from this page...</div></div>';document.body.insertAdjacentHTML('afterbegin',html);var panel=document.getElementById('thumbboy-panel');var header=document.getElementById('thumbboy-header');function dragElement(el,header){var x1=0,x2=0,y1=0,y2=0;header.onmousedown=function(e){e.preventDefault();e.stopPropagation();y1=e.clientX;y2=e.clientY;document.onmousemove=function(e){e.preventDefault();x1=y1-e.clientX;x2=y2-e.clientY;y1=e.clientX;y2=e.clientY;el.style.top=(el.offsetTop-x2)+'px';el.style.left=(el.offsetLeft-x1)+'px';};document.onmouseup=function(){document.onmousemove=null;document.onmouseup=null;};};el.onmousedown=function(e){e.stopPropagation();};}dragElement(panel,header);document.getElementById('thumbboy-grab').addEventListener('click',function(){var images=document.querySelectorAll('img');var urls='';var count=0;var gallery=document.getElementById('thumbboy-gallery');gallery.innerHTML='';gallery.style.display='none';if(images.length===0){document.getElementById('thumbboy-debug').textContent='No images found on this page.';return;}images.forEach(function(img,index){if(img.src&&img.src.trim()!==''){count++;urls+=count+'. '+img.src+'\\n';var galleryItem=document.createElement('div');galleryItem.style.cssText='display:flex;flex-direction:column;align-items:center;padding:5px;border:1px solid #eee;border-radius:5px;background:#fafafa;justify-content:center;width:100%;max-width:150px;';var thumbnail=document.createElement('img');thumbnail.src=img.src;thumbnail.style.cssText='max-width:150px;max-height:150px;object-fit:contain;border:1px solid #ddd;border-radius:3px;background:white;cursor:pointer;transition:transform 0.2s;';thumbnail.title='Click to open in new tab: '+img.src;thumbnail.addEventListener('click',function(){window.open(img.src,'_blank');});thumbnail.onerror=function(){this.style.display='none';var errorText=document.createElement('div');errorText.textContent='Failed to load image';errorText.style.cssText='color:#999;font-size:12px;text-align:center;';galleryItem.appendChild(errorText);};galleryItem.appendChild(thumbnail);gallery.appendChild(galleryItem);}});var summary='Found '+count+' images with valid URLs:\\n\\n'+urls;if(count===0){summary='Found '+images.length+' image elements, but none have valid src URLs.';}else{gallery.style.display='grid';gallery.style.gridTemplateColumns='repeat(3,1fr)';gallery.style.gap='10px';gallery.style.justifyItems='center';}document.getElementById('thumbboy-debug').textContent=summary;});document.getElementById('thumbboy-close').addEventListener('click',function(){panel.remove();});})();";
+    // Clean, working bookmarklet code
+    var thumbboyCode = `(function() {
+        if (document.getElementById('thumbboy-panel')) return;
+        
+        var html = '<div id="thumbboy-panel" style="position:fixed;top:20px;left:20px;z-index:999999;background-color:#f1f1f1;text-align:center;border:1px solid #d3d3d3;width:500px;padding:5px;display:flex;flex-direction:column;font-family:Arial,sans-serif;"><div id="thumbboy-header" style="cursor:move;z-index:1000000;background-color:#2196F3;color:#fff;user-select:none;padding:10px;"><span>ThumbBoy v2.0 - Drag to Move</span></div><div style="background-color:#e8f4f8;padding:20px;margin:10px 0;"><h3 style="margin-top:0;color:#333;">Image URL Grabber</h3><div id="thumbboy-gallery" style="display:none;background:white;border:1px solid #ccc;padding:10px;margin:10px 0;max-height:400px;overflow-y:auto;"></div><button id="thumbboy-grab" style="margin:5px;background:#4CAF50;color:#fff;border:none;padding:10px 20px;cursor:pointer;border-radius:3px;font-size:14px;">Grab Images</button><button id="thumbboy-copy" style="display:none;margin:5px;background:#ff9800;color:#fff;border:none;padding:10px 20px;cursor:pointer;border-radius:3px;font-size:14px;">Copy JSON</button><button id="thumbboy-close" style="margin:5px;background:#f44336;color:#fff;border:none;padding:10px 20px;cursor:pointer;border-radius:3px;font-size:14px;">Close</button></div><div id="thumbboy-debug" style="color:#333;background:white;border:1px solid #ccc;padding:10px;margin-top:10px;max-height:300px;overflow-y:auto;text-align:left;white-space:pre-wrap;font-family:monospace;font-size:12px;">Click "Grab Images" to collect all image URLs from this page...</div></div>';
+        
+        document.body.insertAdjacentHTML('afterbegin', html);
+        
+        var panel = document.getElementById('thumbboy-panel');
+        var header = document.getElementById('thumbboy-header');
+        
+        function dragElement(el, header) {
+            var x1=0,x2=0,y1=0,y2=0;
+            header.onmousedown = function(e) {
+                e.preventDefault();
+                y1=e.clientX; y2=e.clientY;
+                document.onmousemove = function(e) {
+                    e.preventDefault();
+                    x1=y1-e.clientX; x2=y2-e.clientY; y1=e.clientX; y2=e.clientY;
+                    el.style.top=(el.offsetTop-x2)+'px';
+                    el.style.left=(el.offsetLeft-x1)+'px';
+                };
+                document.onmouseup = function() {
+                    document.onmousemove=null; document.onmouseup=null;
+                };
+            };
+        }
+        dragElement(panel, header);
+        
+        document.getElementById('thumbboy-grab').addEventListener('click', function() {
+            var images = document.querySelectorAll('img');
+            var urls = [];
+            var count = 0;
+            var gallery = document.getElementById('thumbboy-gallery');
+            var copyBtn = document.getElementById('thumbboy-copy');
+            
+            gallery.innerHTML = '';
+            gallery.style.display = 'none';
+            copyBtn.style.display = 'none';
+            
+            if (images.length === 0) {
+                document.getElementById('thumbboy-debug').textContent = 'No images found.';
+                return;
+            }
+            
+            images.forEach(function(img) {
+                if (img.src && img.src.trim()) {
+                    count++;
+                    urls.push(img.src);
+                    
+                    var item = document.createElement('div');
+                    item.style.cssText = 'display:flex;flex-direction:column;align-items:center;padding:5px;border:1px solid #eee;border-radius:5px;background:#fafafa;max-width:150px;';
+                    
+                    var thumb = document.createElement('img');
+                    thumb.src = img.src;
+                    thumb.style.cssText = 'max-width:150px;max-height:150px;object-fit:contain;border:1px solid #ddd;cursor:pointer;';
+                    thumb.onclick = function() { window.open(img.src, '_blank'); };
+                    
+                    item.appendChild(thumb);
+                    gallery.appendChild(item);
+                }
+            });
+            
+            var json = {
+                timestamp: new Date().toISOString(),
+                source_url: window.location.href,
+                total_images: count,
+                image_urls: urls
+            };
+            
+            if (count > 0) {
+                gallery.style.display = 'grid';
+                gallery.style.gridTemplateColumns = 'repeat(3,1fr)';
+                gallery.style.gap = '10px';
+                copyBtn.style.display = 'inline-block';
+                window.thumbboyData = json;
+            }
+            
+            document.getElementById('thumbboy-debug').textContent = 'Found ' + count + ' images. JSON:\\n\\n' + JSON.stringify(json, null, 2);
+        });
+        
+        document.getElementById('thumbboy-copy').addEventListener('click', function() {
+            if (window.thumbboyData) {
+                var str = JSON.stringify(window.thumbboyData, null, 2);
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(str);
+                    document.getElementById('thumbboy-debug').textContent = 'Copied!\\n\\n' + str;
+                }
+            }
+        });
+        
+        document.getElementById('thumbboy-close').addEventListener('click', function() {
+            panel.remove();
+        });
+    })();`;
 
-    document.getElementById('bookmarkletLink').href = 'javascript:' + thumbboyCode;
+    document.getElementById('bookmarkletLink').href = 'javascript:' + encodeURIComponent(thumbboyCode);
   </script>
 </body>
 </html>

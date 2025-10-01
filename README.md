@@ -35,3 +35,29 @@ Use the same draggable conotrol panel. Only buttons "grab" and "close."
 
 grab writes out all the images source urls to the debug area.
 close closes the panel.
+
+{
+  "timestamp": "2025-10-01T02:13:59.531Z",
+  "source_url": "https://mx.pinterest.com/",
+  "total_images": 18,
+  "image_urls": [
+    "https://i.pinimg.com/236x/a0/82/05/a082051c34d3c50a68ad9f4584511570.jpg",
+    "https://i.pinimg.com/236x/97/b4/d5/97b4d59856840fc27297ee274b3f158f.jpg",
+    "https://i.pinimg.com/236x/e1/73/1b/e1731b6e7593b6167801f0e9de31264e.jpg",
+    "https://i.pinimg.com/236x/0e/e6/0d/0ee60d43c8c5e9d62614c554669fa84f.jpg",
+    "https://i.pinimg.com/236x/7a/32/7e/7a327ef9c6d975dbc03cd39d48ac67c5.jpg",
+    "https://i.pinimg.com/236x/96/22/91/9622913ed403c353ee350b6119c47003.jpg",
+    "https://i.pinimg.com/videos/thumbnails/originals/06/7d/23/067d23189def3633a5832ef315ee6b84.0000000.jpg",
+    "https://i.pinimg.com/236x/50/f3/80/50f380a5e2936f82d414dd4044833182.jpg",
+    "https://i.pinimg.com/236x/11/59/26/115926275fc674966d933e5444a3b96d.jpg",
+    "https://i.pinimg.com/750x/9f/4e/23/9f4e23132ff5cae0076b103f3b9480af.jpg",
+    "https://i.pinimg.com/750x/9e/91/47/9e9147b087ac0283979dda050574feeb.jpg",
+    "https://i.pinimg.com/750x/8b/fe/b7/8bfeb733102d585e403cd8437592a0db.jpg",
+    "https://i.pinimg.com/236x/64/e5/c5/64e5c5b9df044030f69300c397355bc3.jpg",
+    "https://i.pinimg.com/236x/c8/42/93/c842932e156c0189f3672c5dc62e9849.jpg",
+    "https://i.pinimg.com/236x/64/23/7e/64237e4112277b90292e438c829a99c3.jpg",
+    "https://i.pinimg.com/236x/6f/9b/fe/6f9bfe1889a2d0f3409eb690259398fb.jpg",
+    "https://i.pinimg.com/236x/d3/52/30/d3523077c75d2f4e5b8c97914d72c5ae.jpg",
+    "https://i.pinimg.com/236x/28/41/8f/28418f3b9a7b6868b487edf589a1a761.jpg"
+  ]
+}

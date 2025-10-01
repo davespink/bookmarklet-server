@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ThumbBoy Bookmarklet Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .bookmarklet-btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            cursor: move;
+            font-size: 18px;
+            font-weight: bold;
+            margin: 20px 0;
+            transition: background-color 0.3s;
+        }
+        .bookmarklet-btn:hover {
+            background-color: #45a049;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+            font-family: monospace;
+            font-size: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .code-section {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        button {
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #1976D2;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        h2 {
+            color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 ThumbBoy Bookmarklet Generator</h1>
+        
+        <div class="code-section">
+            <h2>Generated Bookmarklet</h2>
+            <p><strong>Drag this to your bookmarks bar:</strong></p>
+            <p><a class="bookmarklet-btn" href="#" id="generatedBookmarklet">📌 ThumbBoy v2.0</a></p>
+            <p style="color: #666; font-style: italic;">⬆️ This bookmarklet is auto-generated from the clean code below</p>
+        </div>
+
+        <div class="code-section">
+            <h2>Source JavaScript Code</h2>
+            <button onclick="generateBookmarklet()">🔄 Regenerate Bookmarklet</button>
+            <button onclick="copyToClipboard()">📋 Copy Bookmarklet URL</button>
+            <textarea id="sourceCode" placeholder="Paste your JavaScript code here...">
+(function() {
+    // Prevent multiple instances
+    if (document.getElementById('thumbboy-panel')) {
+        return;
+    }
+    
+    // Create the HTML structure
+    var html = `
+        <div id="thumbboy-panel" style="position:fixed;top:20px;left:20px;z-index:999999;background-color:#f1f1f1;text-align:center;border:1px solid #d3d3d3;width:500px;padding:5px;display:flex;flex-direction:column;font-family:Arial,sans-serif;">
+            <div id="thumbboy-header" style="cursor:move;z-index:1000000;background-color:#2196F3;color:#fff;user-select:none;padding:10px;">
+                <span>ThumbBoy v2.0 - Drag to Move</span>
+            </div>
+            <div style="background-color:#e8f4f8;padding:20px;margin:10px 0;">
+                <h3 style="margin-top:0;color:#333;">Image URL Grabber</h3>
+                <div id="thumbboy-gallery" style="display:none;background:white;border:1px solid #ccc;padding:10px;margin:10px 0;max-height:400px;overflow-y:auto;"></div>
+                <button id="thumbboy-grab" style="margin:5px;background:#4CAF50;color:#fff;border:none;padding:10px 20px;cursor:pointer;border-radius:3px;font-size:14px;">Grab Images</button>
+                <button id="thumbboy-copy" style="display:none;margin:5px;background:#ff9800;color:#fff;border:none;padding:10px 20px;cursor:pointer;border-radius:3px;font-size:14px;">Copy JSON</button>
+                <button id="thumbboy-close" style="margin:5px;background:#f44336;color:#fff;border:none;padding:10px 20px;cursor:pointer;border-radius:3px;font-size:14px;">Close</button>
+            </div>
+            <div id="thumbboy-debug" style="color:#333;background:white;border:1px solid #ccc;padding:10px;margin-top:10px;max-height:300px;overflow-y:auto;text-align:left;white-space:pre-wrap;font-family:monospace;font-size:12px;">Click "Grab Images" to collect all image URLs from this page...</div>
+        </div>
+    `;
+    
+    // Insert the HTML
+    document.body.insertAdjacentHTML('afterbegin', html);
+    
+    // Get references to elements
+    var panel = document.getElementById('thumbboy-panel');
+    var header = document.getElementById('thumbboy-header');
+    var gallery = document.getElementById('thumbboy-gallery');
+    var grabBtn = document.getElementById('thumbboy-grab');
+    var copyBtn = document.getElementById('thumbboy-copy');
+    var closeBtn = document.getElementById('thumbboy-close');
+    var debugArea = document.getElementById('thumbboy-debug');
+    
+    // Drag functionality
+    function dragElement(el, header) {
+        var x1 = 0, x2 = 0, y1 = 0, y2 = 0;
+        header.onmousedown = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            y1 = e.clientX;
+            y2 = e.clientY;
+            document.onmousemove = function(e) {
+                e.preventDefault();
+                x1 = y1 - e.clientX;
+                x2 = y2 - e.clientY;
+                y1 = e.clientX;
+                y2 = e.clientY;
+                el.style.top = (el.offsetTop - x2) + 'px';
+                el.style.left = (el.offsetLeft - x1) + 'px';
+            };
+            document.onmouseup = function() {
+                document.onmousemove = null;
+                document.onmouseup = null;
+            };
+        };
+        el.onmousedown = function(e) {
+            e.stopPropagation();
+        };
+    }
+    dragElement(panel, header);
+    
+    // Grab images functionality
+    grabBtn.addEventListener('click', function() {
+        var images = document.querySelectorAll('img');
+        var urls = [];
+        var count = 0;
+        
+        // Clear gallery
+        gallery.innerHTML = '';
+        gallery.style.display = 'none';
+        copyBtn.style.display = 'none';
+        
+        if (images.length === 0) {
+            debugArea.textContent = 'No images found on this page.';
+            return;
+        }
+        
+        images.forEach(function(img) {
+            if (img.src && img.src.trim() !== '') {
+                count++;
+                urls.push(img.src);
+                
+                // Create gallery item
+                var galleryItem = document.createElement('div');
+                galleryItem.style.cssText = 'display:flex;flex-direction:column;align-items:center;padding:5px;border:1px solid #eee;border-radius:5px;background:#fafafa;justify-content:center;width:100%;max-width:150px;';
+                
+                var thumbnail = document.createElement('img');
+                thumbnail.src = img.src;
+                thumbnail.style.cssText = 'max-width:150px;max-height:150px;object-fit:contain;border:1px solid #ddd;border-radius:3px;background:white;cursor:pointer;transition:transform 0.2s;';
+                thumbnail.title = 'Click to open in new tab: ' + img.src;
+                
+                thumbnail.addEventListener('click', function() {
+                    window.open(img.src, '_blank');
+                });
+                
+                thumbnail.onerror = function() {
+                    this.style.display = 'none';
+                    var errorText = document.createElement('div');
+                    errorText.textContent = 'Failed to load image';
+                    errorText.style.cssText = 'color:#999;font-size:12px;text-align:center;';
+                    galleryItem.appendChild(errorText);
+                };
+                
+                galleryItem.appendChild(thumbnail);
+                gallery.appendChild(galleryItem);
+            }
+        });
+        
+        // Create JSON output
+        var jsonOutput = {
+            timestamp: new Date().toISOString(),
+            source_url: window.location.href,
+            total_images: count,
+            image_urls: urls
+        };
+        
+        var summary = 'Found ' + count + ' images. JSON data:\\n\\n' + JSON.stringify(jsonOutput, null, 2);
+        
+        if (count === 0) {
+            summary = 'Found ' + images.length + ' image elements, but none have valid src URLs.';
+        } else {
+            gallery.style.display = 'grid';
+            gallery.style.gridTemplateColumns = 'repeat(3, 1fr)';
+            gallery.style.gap = '10px';
+            gallery.style.justifyItems = 'center';
+            copyBtn.style.display = 'inline-block';
+            window.thumbboyJsonData = jsonOutput;
+        }
+        
+        debugArea.textContent = summary;
+    });
+    
+    // Copy JSON functionality
+    copyBtn.addEventListener('click', function() {
+        if (window.thumbboyJsonData) {
+            var jsonString = JSON.stringify(window.thumbboyJsonData, null, 2);
+            
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(jsonString).then(function() {
+                    debugArea.textContent = 'JSON copied to clipboard!\\n\\n' + jsonString;
+                }).catch(function() {
+                    copyFallback(jsonString);
+                });
+            } else {
+                copyFallback(jsonString);
+            }
+        }
+    });
+    
+    function copyFallback(text) {
+        var textArea = document.createElement('textarea');
+        textArea.value = text;
+        textArea.style.cssText = 'position:fixed;left:-999999px;top:-999999px;';
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            debugArea.textContent = 'JSON copied to clipboard!\\n\\n' + text;
+        } catch (err) {
+            debugArea.textContent = 'Copy failed. Please manually copy the JSON below:\\n\\n' + text;
+        }
+        document.body.removeChild(textArea);
+    }
+    
+    // Close functionality
+    closeBtn.addEventListener('click', function() {
+        panel.remove();
+    });
+})();
+            </textarea>
+            
+            <div style="margin-top: 20px;">
+                <h3>Generated Bookmarklet URL:</h3>
+                <textarea id="bookmarkletOutput" readonly style="height: 100px;"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function generateBookmarklet() {
+            var sourceCode = document.getElementById('sourceCode').value;
+            
+            // Clean and minify the code
+            var cleanCode = sourceCode
+                .replace(/\/\*[\s\S]*?\*\//g, '') // Remove /* */ comments
+                .replace(/\/\/.*$/gm, '') // Remove // comments
+                .replace(/\s+/g, ' ') // Replace multiple spaces with single space
+                .replace(/;\s*}/g, ';}') // Clean up semicolons before closing braces
+                .trim();
+            
+            // Create the bookmarklet URL
+            var bookmarkletUrl = 'javascript:' + encodeURIComponent(cleanCode);
+            
+            // Update the link and textarea
+            document.getElementById('generatedBookmarklet').href = bookmarkletUrl;
+            document.getElementById('bookmarkletOutput').value = bookmarkletUrl;
+            
+            console.log('Bookmarklet generated successfully!');
+        }
+        
+        function copyToClipboard() {
+            var output = document.getElementById('bookmarkletOutput');
+            output.select();
+            document.execCommand('copy');
+            alert('Bookmarklet URL copied to clipboard!');
+        }
+        
+        // Generate bookmarklet on page load
+        generateBookmarklet();
+    </script>
+</body>
+</html>

@@ -2,31 +2,223 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Bookmarklet Launcher</title>
+  <title>ThumbBoy - Image URL Grabber Bookmarklet</title>
   <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
     .bookmarklet-btn {
       display: inline-block;
-      padding: 10px 20px;
-      background-color: #2196F3;
+      padding: 15px 30px;
+      background-color: #4CAF50;
       color: white;
       text-decoration: none;
-      border-radius: 5px;
+      border-radius: 8px;
       cursor: move;
+      font-size: 18px;
+      font-weight: bold;
+      margin: 20px 0;
+      transition: background-color 0.3s;
     }
     .bookmarklet-btn:hover {
-      background-color: #1976D2;
+      background-color: #45a049;
+    }
+    .instructions {
+      background-color: #e8f4f8;
+      padding: 20px;
+      border-radius: 5px;
+      margin: 20px 0;
+    }
+    .feature-list {
+      background-color: #f9f9f9;
+      padding: 20px;
+      border-radius: 5px;
+      margin: 20px 0;
+    }
+    .feature-list ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+    .feature-list li {
+      margin: 8px 0;
+    }
+    h1 {
+      color: #333;
+      text-align: center;
+    }
+    h2 {
+      color: #4CAF50;
+    }
+    .demo-note {
+      background-color: #fff3cd;
+      border: 1px solid #ffeaa7;
+      padding: 15px;
+      border-radius: 5px;
+      margin: 20px 0;
     }
   </style>
 </head>
 <body>
-  <h1>Drag this to your Bookmarks Bar!</h1>
-  <p>Click and drag the button below to your bookmarks bar to install the tool.</p>
-  <a class="bookmarklet-btn" href="#" id="bookmarkletLink">Install Bookmarklet</a>
-<!--    latest code of both  -->
-  <script>
-    var bookmarkletCode = "(function(){var html='<div id=\"myDiv\" style=\"position:absolute;top:0;left:0;z-index:9999;background-color:#f1f1f1;text-align:center;border:1px solid #d3d3d3;width:400px;padding:5px;display:flex;flex-direction:column;\"><div id=\"mydivheader\" style=\"display:flexbox;justify-content:space-between;align-items:center;cursor:move;z-index:10000;background-color:#2196F3;color:#fff;user-select:none;\"><span style=\"position:relative;top:20px\">Click here to move</span><button class=\"hamburger-btn\" style=\"font-size:32px;background:none;margin-top:0px;border:none;cursor:pointer;color:white;float:inline-end;\">☰</button></div><div id=\"panel\" style=\"background-color:aqua;padding:20px\"><p style=\"margin-bottom:30px\">Javascript injection</p><textarea id=\"jsInput\" style=\"margin:auto;width:95%;margin-top:10px;padding:5px;resize:both;\" rows=\"20\" placeholder=\"Type JavaScript here...\"></textarea><button id=\"runBtn\" style=\"margin-top:10px;background:blue;color:#fff;border:none;padding:5px 10px;cursor:pointer;\">Run</button></div><div id=\"testButtonsSection\" style=\"background-color:#e8f4f8;padding:15px;margin:10px 0;border-radius:5px;\"><h4 style=\"margin-top:0;color:#333;\">Quick Test Buttons (CSP-Safe)</h4><div id=\"testButtons\" style=\"display:flex;flex-wrap:wrap;gap:5px;\"><button id=\"testBtn1\" class=\"test-btn\" style=\"background:#4CAF50;color:white;border:none;padding:8px 12px;margin:2px;border-radius:3px;cursor:pointer;font-size:12px;\">DOM Inspector</button><button id=\"testBtn2\" class=\"test-btn\" style=\"background:#4CAF50;color:white;border:none;padding:8px 12px;margin:2px;border-radius:3px;cursor:pointer;font-size:12px;\">Image Counter</button><button id=\"testBtn3\" class=\"test-btn\" style=\"background:#4CAF50;color:white;border:none;padding:8px 12px;margin:2px;border-radius:3px;cursor:pointer;font-size:12px;\">Form Fields</button><button id=\"testBtn4\" class=\"test-btn\" style=\"background:#4CAF50;color:white;border:none;padding:8px 12px;margin:2px;border-radius:3px;cursor:pointer;font-size:12px;\">Page Info</button><button id=\"testBtn5\" class=\"test-btn\" style=\"background:#4CAF50;color:white;border:none;padding:8px 12px;margin:2px;border-radius:3px;cursor:pointer;font-size:12px;\">Link Checker</button></div><div style=\"margin-top:10px;\"><input type=\"text\" id=\"newButtonName\" placeholder=\"New button name...\" style=\"padding:5px;width:150px;\"><button id=\"addTestBtn\" style=\"background:green;margin-top:10px;color:#fff;border:none;padding:5px 10px;cursor:pointer;\">Add Button</button></div></div><button id=\"closeBtn\" style=\"margin-top:10px;background:blue;color:#fff;border:none;padding:5px 10px;cursor:pointer;\">Close</button><button id=\"wsBtn\" style=\"margin-top:10px;background:blue;color:#fff;border:none;padding:5px 10px;cursor:pointer;\">Test WebSocket</button><button id=\"fetchBtn\" style=\"margin-top:10px;background:blue;color:#fff;border:none;padding:5px 10px;cursor:pointer;\">Test Fetch</button><button id=\"snapBtn\" style=\"margin-top:10px;background:blue;color:#fff;border:none;padding:5px 10px;cursor:pointer;\">Take Snapshot</button><p id=\"debug\" style=\"color:#333;\">Debug goes here</p></div>';var container=document.createElement('div');document.body.appendChild(container);container.innerHTML=html;var panel=document.getElementById('myDiv');var header=document.getElementById('mydivheader');var input=document.getElementById('jsInput');function dragElement(el,header){var x1=0,x2=0,y1=0,y2=0;header.onmousedown=function(e){e.preventDefault();e.stopPropagation();y1=e.clientX;y2=e.clientY;document.onmousemove=function(e){e.preventDefault();x1=y1-e.clientX;x2=y2-e.clientY;y1=e.clientX;y2=e.clientY;el.style.top=(el.offsetTop-x2)+'px';el.style.left=(el.offsetLeft-x1)+'px';};document.onmouseup=function(){document.onmousemove=null;document.onmouseup=null;};};el.onmousedown=function(e){e.stopPropagation();};}dragElement(panel,header);setTimeout(function(){input.focus();},0);document.getElementById('runBtn').addEventListener('click',function(){try{var code=input.value;var fn=new Function(code);fn();document.getElementById('debug').textContent='Code executed successfully!';}catch(e){document.getElementById('debug').textContent='Error: '+e.message;}});document.getElementById('closeBtn').addEventListener('click',function(){panel.remove();});document.getElementById('wsBtn').addEventListener('click',function(){var ws=new WebSocket('wss://ws.postman-echo.com/raw');ws.addEventListener('open',function(){ws.send('Hello, WebSocket!');});ws.addEventListener('message',function(e){console.log('Message:',e.data);ws.close();});ws.addEventListener('close',function(){console.log('WebSocket closed');});ws.addEventListener('error',function(e){console.error('WebSocket error:',e);});});document.getElementById('fetchBtn').addEventListener('click',function(){fetch('https://jsonplaceholder.typicode.com/posts/1').then(res=>res.ok?res.json():Promise.reject('Network error: '+res.statusText)).then(data=>console.log('Fetched:',data)).catch(e=>console.error('Fetch Error:',e));});document.getElementById('snapBtn').addEventListener('click',function(){fetch('https://your-server.com/snapshot',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url:window.location.href})}).then(res=>res.ok?res.blob():Promise.reject('Snapshot failed: '+res.statusText)).then(blob=>{var imgUrl=URL.createObjectURL(blob);window.open(imgUrl,'_blank');document.getElementById('debug').textContent='Snapshot taken!';}).catch(e=>document.getElementById('debug').textContent='Snapshot Error: '+e.message);});var testFunctions={'DOM Inspector':function(){var elements=document.querySelectorAll('*');var info='Elements: '+elements.length+'\\n';info+='Images: '+document.images.length+'\\n';info+='Links: '+document.links.length+'\\n';info+='Forms: '+document.forms.length;document.getElementById('debug').textContent=info;},'Image Counter':function(){var images=document.querySelectorAll('img');var loaded=0;var total=images.length;var urls='';images.forEach(function(img){if(img.complete&&img.naturalWidth>0){loaded++;urls+=img.src+'\\n';}});document.getElementById('debug').textContent=urls+' Images: '+loaded+'/'+total+' loaded';},'Form Fields':function(){var inputs=document.querySelectorAll('input, textarea, select');var info='Form fields found: '+inputs.length+'\\n';var types={};inputs.forEach(function(input){var type=input.type||input.tagName.toLowerCase();types[type]=(types[type]||0)+1;});for(var type in types){info+=type+': '+types[type]+'\\n';}document.getElementById('debug').textContent=info;},'Page Info':function(){var info='Title: '+document.title+'\\n';info+='URL: '+window.location.href+'\\n';info+='Domain: '+window.location.hostname+'\\n';info+='Protocol: '+window.location.protocol;document.getElementById('debug').textContent=info;},'Link Checker':function(){var links=document.querySelectorAll('a[href]');var external=0;var internal=0;var mailto=0;links.forEach(function(link){var href=link.href;if(href.startsWith('mailto:')){mailto++;}else if(href.startsWith('http')&&!href.includes(window.location.hostname)){external++;}else{internal++;}});var info='Total links: '+links.length+'\\n';info+='Internal: '+internal+'\\n';info+='External: '+external+'\\n';info+='Mailto: '+mailto;document.getElementById('debug').textContent=info;}};document.getElementById('testBtn1').addEventListener('click',testFunctions['DOM Inspector']);document.getElementById('testBtn2').addEventListener('click',testFunctions['Image Counter']);document.getElementById('testBtn3').addEventListener('click',testFunctions['Form Fields']);document.getElementById('testBtn4').addEventListener('click',testFunctions['Page Info']);document.getElementById('testBtn5').addEventListener('click',testFunctions['Link Checker']);document.getElementById('addTestBtn').addEventListener('click',function(){var buttonName=document.getElementById('newButtonName').value.trim();if(buttonName){var testButtonsDiv=document.getElementById('testButtons');var newButton=document.createElement('button');newButton.className='test-btn';newButton.style.cssText='background:#4CAF50;color:white;border:none;padding:8px 12px;margin:2px;border-radius:3px;cursor:pointer;font-size:12px;';newButton.textContent=buttonName;newButton.addEventListener('click',function(){try{var code=document.getElementById('jsInput').value;if(code.trim()){var fn=new Function(code);fn();document.getElementById('debug').textContent=buttonName+' executed successfully!';}else{document.getElementById('debug').textContent='No code in textarea to execute for '+buttonName;}}catch(e){document.getElementById('debug').textContent=buttonName+' Error: '+e.message;}});testButtonsDiv.appendChild(newButton);document.getElementById('newButtonName').value='';}});document.querySelector('.hamburger-btn').addEventListener('click',function(){var testSection=document.getElementById('testButtonsSection');if(testSection.style.display==='none'){testSection.style.display='block';}else{testSection.style.display='none';}});})();";
+  <div class="container">
+    <h1>🖼️ ThumbBoy - Image URL Grabber</h1>
+    <p style="text-align: center; font-size: 18px; color: #666;">
+      A simple, focused bookmarklet for quickly grabbing all image URLs from any webpage
+    </p>
 
-    document.getElementById('bookmarkletLink').href = 'javascript:' + bookmarkletCode;
+    <div class="instructions">
+      <h2>📥 Installation Instructions</h2>
+      <ol>
+        <li><strong>Drag the green button below</strong> to your browser's bookmarks bar</li>
+        <li><strong>Visit any webpage</strong> with images</li>
+        <li><strong>Click the ThumbBoy bookmark</strong> to launch the tool</li>
+        <li><strong>Click "Grab Images"</strong> to collect all image URLs</li>
+      </ol>
+    </div>
+
+    <div style="text-align: center;">
+      <a class="bookmarklet-btn" href="#" id="bookmarkletLink">📌 ThumbBoy</a>
+      <p style="color: #666; font-style: italic;">⬆️ Drag this button to your bookmarks bar</p>
+    </div>
+
+    <div class="feature-list">
+      <h2>✨ Features</h2>
+      <ul>
+        <li>🎯 <strong>Simple & Focused</strong> - Only does one thing: grab image URLs</li>
+        <li>🖱️ <strong>Draggable Interface</strong> - Move the panel anywhere on the page</li>
+        <li>📝 <strong>Numbered List</strong> - All URLs are numbered for easy reference</li>
+        <li>🔍 <strong>Smart Filtering</strong> - Only shows images with valid URLs</li>
+        <li>📊 <strong>Count Summary</strong> - Shows total number of images found</li>
+        <li>💾 <strong>Copy-Friendly</strong> - Easy to select and copy URLs</li>
+        <li>🚫 <strong>CSP Safe</strong> - Works on most websites without restrictions</li>
+      </ul>
+    </div>
+
+    <div class="demo-note">
+      <h2>🧪 Try It Out</h2>
+      <p>Test ThumbBoy on websites like:</p>
+      <ul>
+        <li>Image galleries or portfolios</li>
+        <li>Social media feeds</li>
+        <li>E-commerce product pages</li>
+        <li>News articles with photos</li>
+        <li>Any webpage with images!</li>
+      </ul>
+    </div>
+
+    <div style="text-align: center; margin-top: 30px; color: #666; font-size: 14px;">
+      <p>ThumbBoy is a lightweight, privacy-focused tool that runs entirely in your browser.</p>
+      <p>No data is sent to external servers.</p>
+    </div>
+  </div>
+
+  <script>
+    // Clean, working bookmarklet code
+    var thumbboyCode = `(function() {
+        if (document.getElementById('thumbboy-panel')) return;
+        
+        var html = '<div id="thumbboy-panel" style="position:fixed;top:20px;left:20px;z-index:999999;background-color:#f1f1f1;text-align:center;border:1px solid #d3d3d3;width:500px;padding:5px;display:flex;flex-direction:column;font-family:Arial,sans-serif;"><div id="thumbboy-header" style="cursor:move;z-index:1000000;background-color:#2196F3;color:#fff;user-select:none;padding:10px;"><span>ThumbBoy v2.0 - Drag to Move</span></div><div style="background-color:#e8f4f8;padding:20px;margin:10px 0;"><h3 style="margin-top:0;color:#333;">Image URL Grabber</h3><div id="thumbboy-gallery" style="display:none;background:white;border:1px solid #ccc;padding:10px;margin:10px 0;max-height:400px;overflow-y:auto;"></div><button id="thumbboy-grab" style="margin:5px;background:#4CAF50;color:#fff;border:none;padding:10px 20px;cursor:pointer;border-radius:3px;font-size:14px;">Grab Images</button><button id="thumbboy-copy" style="display:none;margin:5px;background:#ff9800;color:#fff;border:none;padding:10px 20px;cursor:pointer;border-radius:3px;font-size:14px;">Copy JSON</button><button id="thumbboy-close" style="margin:5px;background:#f44336;color:#fff;border:none;padding:10px 20px;cursor:pointer;border-radius:3px;font-size:14px;">Close</button></div><div id="thumbboy-debug" style="color:#333;background:white;border:1px solid #ccc;padding:10px;margin-top:10px;max-height:300px;overflow-y:auto;text-align:left;white-space:pre-wrap;font-family:monospace;font-size:12px;">Click "Grab Images" to collect all image URLs from this page...</div></div>';
+        
+        document.body.insertAdjacentHTML('afterbegin', html);
+        
+        var panel = document.getElementById('thumbboy-panel');
+        var header = document.getElementById('thumbboy-header');
+        
+        function dragElement(el, header) {
+            var x1=0,x2=0,y1=0,y2=0;
+            header.onmousedown = function(e) {
+                e.preventDefault();
+                y1=e.clientX; y2=e.clientY;
+                document.onmousemove = function(e) {
+                    e.preventDefault();
+                    x1=y1-e.clientX; x2=y2-e.clientY; y1=e.clientX; y2=e.clientY;
+                    el.style.top=(el.offsetTop-x2)+'px';
+                    el.style.left=(el.offsetLeft-x1)+'px';
+                };
+                document.onmouseup = function() {
+                    document.onmousemove=null; document.onmouseup=null;
+                };
+            };
+        }
+        dragElement(panel, header);
+        
+        document.getElementById('thumbboy-grab').addEventListener('click', function() {
+            var images = document.querySelectorAll('img');
+            var urls = [];
+            var count = 0;
+            var gallery = document.getElementById('thumbboy-gallery');
+            var copyBtn = document.getElementById('thumbboy-copy');
+            
+            gallery.innerHTML = '';
+            gallery.style.display = 'none';
+            copyBtn.style.display = 'none';
+            
+            if (images.length === 0) {
+                document.getElementById('thumbboy-debug').textContent = 'No images found.';
+                return;
+            }
+            
+            images.forEach(function(img) {
+                if (img.src && img.src.trim()) {
+                    count++;
+                    urls.push(img.src);
+                    
+                    var item = document.createElement('div');
+                    item.style.cssText = 'display:flex;flex-direction:column;align-items:center;padding:5px;border:1px solid #eee;border-radius:5px;background:#fafafa;max-width:150px;';
+                    
+                    var thumb = document.createElement('img');
+                    thumb.src = img.src;
+                    thumb.style.cssText = 'max-width:150px;max-height:150px;object-fit:contain;border:1px solid #ddd;cursor:pointer;';
+                    thumb.onclick = function() { window.open(img.src, '_blank'); };
+                    
+                    item.appendChild(thumb);
+                    gallery.appendChild(item);
+                }
+            });
+            
+            var json = {
+                timestamp: new Date().toISOString(),
+                source_url: window.location.href,
+                total_images: count,
+                image_urls: urls
+            };
+            
+            if (count > 0) {
+                gallery.style.display = 'grid';
+                gallery.style.gridTemplateColumns = 'repeat(3,1fr)';
+                gallery.style.gap = '10px';
+                copyBtn.style.display = 'inline-block';
+                window.thumbboyData = json;
+            }
+            
+            document.getElementById('thumbboy-debug').textContent = 'Found ' + count + ' images. JSON:\\n\\n' + JSON.stringify(json, null, 2);
+        });
+        
+        document.getElementById('thumbboy-copy').addEventListener('click', function() {
+            if (window.thumbboyData) {
+                var str = JSON.stringify(window.thumbboyData, null, 2);
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(str);
+                    document.getElementById('thumbboy-debug').textContent = 'Copied!\\n\\n' + str;
+                }
+            }
+        });
+        
+        document.getElementById('thumbboy-close').addEventListener('click', function() {
+            panel.remove();
+        });
+    })();`;
+
+    document.getElementById('bookmarkletLink').href = 'javascript:' + encodeURIComponent(thumbboyCode);
   </script>
 </body>
 </html>

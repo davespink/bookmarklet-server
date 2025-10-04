@@ -92,22 +92,20 @@
         return;
     }
     
-    // Create the HTML structure
-    var html = `
-        <div id="thumbboy-panel" style="position:fixed;top:20px;left:20px;z-index:999999;background-color:#f1f1f1;text-align:center;border:1px solid #d3d3d3;width:500px;padding:5px;display:flex;flex-direction:column;font-family:Arial,sans-serif;">
-            <div id="thumbboy-header" style="cursor:move;z-index:1000000;background-color:#2196F3;color:#fff;user-select:none;padding:10px;">
-                <span>ThumbBoy v2.0 - Drag to Move</span>
-            </div>
-            <div style="background-color:#e8f4f8;padding:20px;margin:10px 0;">
-                <h3 style="margin-top:0;color:#333;">Image URL Grabber</h3>
-                <div id="thumbboy-gallery" style="display:none;background:white;border:1px solid #ccc;padding:10px;margin:10px 0;max-height:400px;overflow-y:auto;"></div>
-                <button id="thumbboy-grab" style="margin:5px;background:#4CAF50;color:#fff;border:none;padding:10px 20px;cursor:pointer;border-radius:3px;font-size:14px;">Grab Images</button>
-                <button id="thumbboy-copy" style="display:none;margin:5px;background:#ff9800;color:#fff;border:none;padding:10px 20px;cursor:pointer;border-radius:3px;font-size:14px;">Copy JSON</button>
-                <button id="thumbboy-close" style="margin:5px;background:#f44336;color:#fff;border:none;padding:10px 20px;cursor:pointer;border-radius:3px;font-size:14px;">Close</button>
-            </div>
-            <div id="thumbboy-debug" style="color:#333;background:white;border:1px solid #ccc;padding:10px;margin-top:10px;max-height:300px;overflow-y:auto;text-align:left;white-space:pre-wrap;font-family:monospace;font-size:12px;">Click "Grab Images" to collect all image URLs from this page...</div>
-        </div>
-    `;
+    // Create the HTML structure using string concatenation (no template literals)
+    var html = '<div id="thumbboy-panel" style="position:fixed;top:20px;left:20px;z-index:999999;background-color:#f1f1f1;text-align:center;border:1px solid #d3d3d3;width:500px;padding:5px;display:flex;flex-direction:column;font-family:Arial,sans-serif;">' +
+        '<div id="thumbboy-header" style="cursor:move;z-index:1000000;background-color:#2196F3;color:#fff;user-select:none;padding:10px;">' +
+        '<span>ThumbBoy v2.0 - Drag to Move</span>' +
+        '</div>' +
+        '<div style="background-color:#e8f4f8;padding:20px;margin:10px 0;">' +
+        '<h3 style="margin-top:0;color:#333;">Image URL Grabber</h3>' +
+        '<div id="thumbboy-gallery" style="display:none;background:white;border:1px solid #ccc;padding:10px;margin:10px 0;max-height:400px;overflow-y:auto;"></div>' +
+        '<button id="thumbboy-grab" style="margin:5px;background:#4CAF50;color:#fff;border:none;padding:10px 20px;cursor:pointer;border-radius:3px;font-size:14px;">Grab Images</button>' +
+        '<button id="thumbboy-copy" style="display:none;margin:5px;background:#ff9800;color:#fff;border:none;padding:10px 20px;cursor:pointer;border-radius:3px;font-size:14px;">Copy JSON</button>' +
+        '<button id="thumbboy-close" style="margin:5px;background:#f44336;color:#fff;border:none;padding:10px 20px;cursor:pointer;border-radius:3px;font-size:14px;">Close</button>' +
+        '</div>' +
+        '<div id="thumbboy-debug" style="color:#333;background:white;border:1px solid #ccc;padding:10px;margin-top:10px;max-height:300px;overflow-y:auto;text-align:left;white-space:pre-wrap;font-family:monospace;font-size:12px;">Click "Grab Images" to collect all image URLs from this page...</div>' +
+        '</div>';
     
     // Insert the HTML
     document.body.insertAdjacentHTML('afterbegin', html);
@@ -261,8 +259,9 @@
             </textarea>
             
             <div style="margin-top: 20px;">
-                <h3>Generated Bookmarklet URL:</h3>
-                <textarea id="bookmarkletOutput" readonly style="height: 100px;"></textarea>
+                <h3>Generated JavaScript Code for Install File:</h3>
+                <p style="color: #666; font-size: 14px;">Copy this code and paste it into your thumbboy-install.html file's &lt;script&gt; section:</p>
+                <textarea id="bookmarkletOutput" readonly style="height: 120px;"></textarea>
             </div>
         </div>
     </div>
@@ -271,7 +270,7 @@
         function generateBookmarklet() {
             var sourceCode = document.getElementById('sourceCode').value;
             
-            // Clean and minify the code
+            // Clean and minify the code (but don't URL encode yet)
             var cleanCode = sourceCode
                 .replace(/\/\*[\s\S]*?\*\//g, '') // Remove /* */ comments
                 .replace(/\/\/.*$/gm, '') // Remove // comments
@@ -279,12 +278,15 @@
                 .replace(/;\s*}/g, ';}') // Clean up semicolons before closing braces
                 .trim();
             
-            // Create the bookmarklet URL
+            // Store the clean code as a regular string (like the working install file)
+            var bookmarkletVariable = 'var thumbboyCode = "' + cleanCode.replace(/"/g, '\\"') + '";';
+            
+            // Create the bookmarklet URL using encodeURIComponent (like the working install file)
             var bookmarkletUrl = 'javascript:' + encodeURIComponent(cleanCode);
             
             // Update the link and textarea
             document.getElementById('generatedBookmarklet').href = bookmarkletUrl;
-            document.getElementById('bookmarkletOutput').value = bookmarkletUrl;
+            document.getElementById('bookmarkletOutput').value = bookmarkletVariable + '\n\ndocument.getElementById(\'bookmarkletLink\').href = \'javascript:\' + encodeURIComponent(thumbboyCode);';
             
             console.log('Bookmarklet generated successfully!');
         }
@@ -293,7 +295,7 @@
             var output = document.getElementById('bookmarkletOutput');
             output.select();
             document.execCommand('copy');
-            alert('Bookmarklet URL copied to clipboard!');
+            alert('Bookmarklet code copied to clipboard!');
         }
         
         // Generate bookmarklet on page load

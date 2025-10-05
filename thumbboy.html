@@ -9,7 +9,7 @@
             font-family: Arial, sans-serif;
         }
 
-        #myDiv {
+        #thumbboy-panel {
             position: absolute;
             top: 0;
             left: 0;
@@ -23,7 +23,7 @@
             flex-direction: column;
         }
 
-        #mydivheader {
+        #thumbboy-header {
             display: flexbox;
             justify-content: space-between;
             align-items: center;
@@ -46,31 +46,31 @@
             font-size: 14px;
         }
 
-        #grabBtn {
+        #thumbboy-grab {
             background: #4CAF50;
         }
 
-        #grabBtn:hover {
+        #thumbboy-grab:hover {
             background: #45a049;
         }
 
-        #closeBtn {
+        #thumbboy-close {
             background: #f44336;
         }
 
-        #closeBtn:hover {
+        #thumbboy-close:hover {
             background: #da190b;
         }
 
-        #copyBtn {
+        #thumbboy-copy {
             background: #ff9800;
         }
 
-        #copyBtn:hover {
+        #thumbboy-copy:hover {
             background: #e68900;
         }
 
-        #debug {
+        #thumbboy-debug {
             color: #333;
             background: white;
             border: 1px solid #ccc;
@@ -90,7 +90,7 @@
             margin: 10px 0;
         }
 
-        #gallery {
+        #thumbboy-gallery {
             display: none;
             background: white;
             border: 1px solid #ccc;
@@ -100,7 +100,7 @@
             overflow-y: auto;
         }
 
-        #gallery.show {
+        #thumbboy-gallery.show {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 10px;
@@ -140,20 +140,20 @@
 
 <body>
 
-    <div id="myDiv" style="text-align: center;">
-        <div id="mydivheader">
-            <span>ThumbBoy v2.0 - Drag to Move</span>
+    <div id="thumbboy-panel" style="text-align: center;">
+        <div id="thumbboy-header">
+            <span>ThumbBoy v2.1 - Drag to Move</span>
         </div>
 
         <div class="panel-content">
             <h3 style="margin-top: 0; color: #333;">Image URL Grabber</h3>
-            <div id="gallery"></div>
-            <button id="grabBtn">Grab Images</button>
-            <button id="copyBtn" style="display: none;">Copy JSON</button>
-            <button id="closeBtn">Close</button>
+            <div id="thumbboy-gallery"></div>
+            <button id="thumbboy-grab">Grab Images</button>
+            <button id="thumbboy-copy" style="display: none;">Copy JSON</button>
+            <button id="thumbboy-close">Close</button>
         </div>
 
-        <div id="debug">Click "Grab Images" to collect all image URLs from this page...</div>
+        <div id="thumbboy-debug">Click "Grab Images" to collect all image URLs from this page...</div>
     </div>
 
     <script>
@@ -161,8 +161,8 @@
 
         (function () {
             // Element references
-            var panel = document.getElementById('myDiv');
-            var header = document.getElementById('mydivheader');
+            var panel = document.getElementById('thumbboy-panel');
+            var header = document.getElementById('thumbboy-header');
 
             // Dragging functionality
             function dragElement(el, header) {
@@ -193,12 +193,12 @@
             dragElement(panel, header);
 
             // Grab button functionality
-            document.getElementById('grabBtn').addEventListener('click', function () {
+            document.getElementById('thumbboy-grab').addEventListener('click', function () {
                 var images = document.querySelectorAll('img');
                 var urls = [];
                 var count = 0;
-                var gallery = document.getElementById('gallery');
-                var copyBtn = document.getElementById('copyBtn');
+                var gallery = document.getElementById('thumbboy-gallery');
+                var copyBtn = document.getElementById('thumbboy-copy');
 
                 // Clear previous gallery
                 gallery.innerHTML = '';
@@ -206,7 +206,7 @@
                 copyBtn.style.display = 'none';
 
                 if (images.length === 0) {
-                    document.getElementById('debug').textContent = 'No images found on this page.';
+                    document.getElementById('thumbboy-debug').textContent = 'No images found on this page.';
                     return;
                 }
 
@@ -264,17 +264,17 @@
                     window.thumbboyJsonData = jsonOutput;
                 }
 
-                document.getElementById('debug').textContent = summary;
+                document.getElementById('thumbboy-debug').textContent = summary;
             });
 
             // Copy button functionality
-            document.getElementById('copyBtn').addEventListener('click', function () {
+            document.getElementById('thumbboy-copy').addEventListener('click', function () {
                 if (window.thumbboyJsonData) {
                     var jsonString = JSON.stringify(window.thumbboyJsonData, null, 2);
                     
                     if (navigator.clipboard && navigator.clipboard.writeText) {
                         navigator.clipboard.writeText(jsonString).then(function() {
-                            document.getElementById('debug').textContent = 'JSON copied to clipboard!\n\n' + jsonString;
+                            document.getElementById('thumbboy-debug').textContent = 'JSON copied to clipboard!\n\n' + jsonString;
                         }).catch(function() {
                             copyToClipboardFallback(jsonString);
                         });
@@ -296,16 +296,16 @@
                 
                 try {
                     document.execCommand('copy');
-                    document.getElementById('debug').textContent = 'JSON copied to clipboard!\n\n' + text;
+                    document.getElementById('thumbboy-debug').textContent = 'JSON copied to clipboard!\n\n' + text;
                 } catch (err) {
-                    document.getElementById('debug').textContent = 'Copy failed. Please manually copy the JSON below:\n\n' + text;
+                    document.getElementById('thumbboy-debug').textContent = 'Copy failed. Please manually copy the JSON below:\n\n' + text;
                 }
                 
                 document.body.removeChild(textArea);
             }
 
             // Close button functionality
-            document.getElementById('closeBtn').addEventListener('click', function () {
+            document.getElementById('thumbboy-close').addEventListener('click', function () {
                 panel.remove();
             });
 
@@ -313,7 +313,7 @@
 
 
 
-        
+
     </script>
 </body>
 

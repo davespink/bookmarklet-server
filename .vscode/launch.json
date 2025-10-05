@@ -15,22 +15,6 @@
             "webRoot": "${workspaceFolder}"
         },
 
-
-        {
-            "type": "chrome",
-            "request": "launch",
-            "name": "Explorer tool",
-            "url": "http://localhost/bookmarklet-server/explorer-tool.html",
-            "webRoot": "${workspaceFolder}"
-        },
-
-
-        {
-            "type": "chrome",
-            "request": "launch",
-            "name": "Index",
-            "url": "http://localhost/projects/bookmarklet-server/index.html",
-            "webRoot": "${workspaceFolder}"
-        }
+ 
     ]
 }
